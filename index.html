@@ -225,7 +225,282 @@ function drawRealisticPigeon() {
     box(10);
   pop();
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinning Pigeon</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/addons/p5.sound.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script>
+let angle = 0;
+let particles = [];
+let babies = []; 
+let bounce = 0;
+let clickTimer = 0;
+let startTime;
 
+// TOTAL timer
+let totalSeconds = 0;
+let lastSecond = 0;
+
+// Music
+let osc1, osc2, env;
+let melody = [60, 62, 64, 67, 64, 62, 60, 55];
+let noteIndex = 0;
+let nextNoteTime = 0;
+
+// Textures
+let bodyTex, wingTex, headTex;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  startTime = millis();
+  lastSecond = millis();
+
+  // --- Music setup ---
+  osc1 = new p5.Oscillator('sine');
+  osc2 = new p5.Oscillator('triangle');
+  env = new p5.Envelope();
+  env.setADSR(0.1, 0.2, 0.3, 0.4);
+  env.setRange(0.3, 0);
+  osc1.start();
+  osc2.start();
+  osc1.amp(0);
+  osc2.amp(0);
+  nextNoteTime = millis() + 800;
+
+  // --- Textures (same as before) ---
+  bodyTex = createGraphics(128, 128);
+  bodyTex.background(140, 145, 150);
+  for (let y = 0; y < 128; y++) {
+    let inter = map(y, 0, 128, 0, 1);
+    let c = lerpColor(color(115, 120, 125), color(165, 170, 175), inter);
+    bodyTex.stroke(c);
+    bodyTex.line(0, y, 128, y);
+  }
+  bodyTex.fill(50, 52, 55);
+  bodyTex.noStroke();
+  bodyTex.rect(0, 100, 128, 28);
+
+  wingTex = createGraphics(128, 128);
+  wingTex.background(135, 140, 145);
+  for(let i=0; i<300; i++){
+    wingTex.fill(100, 105, 110, 40);
+    wingTex.noStroke();
+    wingTex.ellipse(random(128), random(128), random(5,15));
+  }
+  wingTex.fill(45, 47, 50);
+  wingTex.rect(0, 45, 128, 12);
+  wingTex.rect(0, 70, 128, 12);
+
+  headTex = createGraphics(128, 128);
+  headTex.background(110, 115, 120); 
+  for (let y = 0; y < 128; y++) {
+    let intensity = map(y, 0, 128, 100, 255);
+    headTex.stroke(35, 130 + sin(y*0.1)*20, 95 + cos(y*0.1)*20, intensity);
+    headTex.line(0, y, 128, y);
+  }
+
+  // Particles
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: random(-600, 600), y: random(-400, 400), z: random(-600, 600),
+      speed: random(1, 3), size: random(2, 5)
+    });
+  }
+}
+
+function draw() {
+  background(5, 7, 15);
+  
+  ambientLight(150);
+  directionalLight(245, 245, 255, 0.5, 1, -0.2);
+  directionalLight(80, 80, 90, -0.5, -1, 0.2); 
+  
+  // Particles
+  noStroke();
+  fill(160, 175, 190, 130);
+  for (let p of particles) {
+    push(); translate(p.x, p.y, p.z); sphere(p.size); pop();
+    p.y -= p.speed; if (p.y < -400) p.y = 400;
+  }
+
+  // Spin logic
+  let speedMultiplier = mouseX > 0 ? map(mouseX, 0, width, 0.1, 8.0) : 1.0;
+  let baseSpeed = 0.025 * speedMultiplier;
+  if (clickTimer > 0) { baseSpeed *= 3.0; clickTimer--; }
+  angle += baseSpeed;
+  bounce = sin(frameCount * 0.05) * 5;
+
+  // Baby pigeons
+  for (let i = babies.length - 1; i >= 0; i--) {
+    let baby = babies[i];
+    baby.orbitAngle += baby.orbitSpeed * speedMultiplier;
+    baby.localSpin += 0.05 * speedMultiplier;
+    let bx = cos(baby.orbitAngle) * baby.radius;
+    let bz = sin(baby.orbitAngle) * baby.radius;
+    push();
+      translate(bx, baby.yPos, bz);
+      rotateY(baby.localSpin);
+      scale(baby.sizeScale); 
+      drawRealisticPigeon(); 
+    pop();
+    baby.yPos -= 0.5;
+    if (baby.yPos < -windowHeight / 2 - 100) babies.splice(i, 1);
+  }
+
+  // Main pigeon
+  push();
+    translate(0, bounce, 0);
+    rotateY(angle); 
+    let clickScale = clickTimer > 0 ? 1.25 : 1.0;
+    scale(min(width, height) * 0.0035 * clickScale);
+    drawRealisticPigeon(); 
+  pop();
+
+  // TOTAL TIMER
+  if (millis() - lastSecond >= 1000) {
+    totalSeconds++;
+    lastSecond = millis();
+  }
+  let mins = floor(totalSeconds / 60);
+  let secs = totalSeconds % 60;
+  let timeString = nf(mins, 2) + ":" + nf(secs, 2);
+
+  push();
+    translate(-width / 2 + 40, -height / 2 + 40, 0);
+    fill(100, 220, 255);
+    textSize(22);
+    textAlign(LEFT, CENTER);
+    text("TOTAL: " + timeString, 0, 0);
+  pop();
+
+  // Music
+  playTunes();
+}
+
+function playTunes() {
+  if (millis() > nextNoteTime) {
+    let midi = melody[noteIndex];
+    let freq = midiToFreq(midi);
+    
+    osc1.freq(freq);
+    osc2.freq(freq * 1.5);
+    env.play(osc1);
+    env.play(osc2);
+    
+    noteIndex = (noteIndex + 1) % melody.length;
+    nextNoteTime = millis() + 550;
+  }
+}
+
+function mousePressed() {
+  clickTimer = 40; 
+  babies.push({
+    orbitAngle: random(TWO_PI), 
+    orbitSpeed: random(0.01, 0.03), 
+    radius: random(180, 320),
+    yPos: random(-100, 150), 
+    localSpin: random(TWO_PI), 
+    sizeScale: min(width, height) * 0.0012 
+  });
+  if (babies.length > 25) babies.shift();
+  
+  // Little click sound
+  let clickOsc = new p5.Oscillator('square');
+  clickOsc.freq(440);
+  clickOsc.amp(0.15);
+  clickOsc.start();
+  setTimeout(() => clickOsc.stop(), 80);
+}
+
+function drawRealisticPigeon() {
+  noStroke();
+
+  texture(bodyTex);
+  push();
+    scale(0.88, 1.0, 1.48);
+    sphere(48, 24, 24); 
+  pop();
+
+  push();
+    translate(0, -38, 32); 
+    texture(headTex);
+    sphere(19, 24, 24);
+    
+    fill(235, 235, 240); 
+    push(); translate(0, 1, 15); sphere(4.5); pop(); 
+    
+    fill(55, 55, 58);
+    push();
+      translate(0, 3, 21);
+      rotateX(1.42); 
+      cone(3.2, 22, 16);
+    pop();
+    
+    fill(240, 100, 20);
+    push(); translate(15.5, -2, 3); sphere(3.2); pop(); 
+    push(); translate(-15.5, -2, 3); sphere(3.2); pop();
+    fill(10, 10, 12);
+    push(); translate(16.2, -2, 3.5); sphere(1.5); pop(); 
+    push(); translate(-16.2, -2, 3.5); sphere(1.5); pop();
+  pop();
+
+  texture(wingTex);
+  push();
+    translate(38, -8, -12);
+    rotateY(-0.08);
+    rotateZ(0.14 + sin(frameCount * 0.1) * 0.02); 
+    scale(0.14, 0.72, 1.85); 
+    box(50);
+  pop();
+  push();
+    translate(-38, -8, -12);
+    rotateY(0.08);
+    rotateZ(-0.14 - sin(frameCount * 0.1) * 0.02);
+    scale(0.14, 0.72, 1.85); 
+    box(50);
+  pop();
+
+  texture(bodyTex);
+  push();
+    translate(0, 14, -84);
+    rotateX(0.04);
+    scale(0.85, 0.08, 1.65); 
+    box(36);
+  pop();
+
+  fill(215, 75, 75);
+  push();
+    translate(15, 48, -2);
+    cylinder(2.8, 26);
+    translate(0, 13, 4);
+    scale(1.1, 0.2, 1.7);
+    box(10);
+  pop();
+  push();
+    translate(-16, 48, -2);
+    cylinder(2.8, 26);
+    translate(0, 13, 4);
+    scale(1.1, 0.2, 1.7);
+    box(10);
+  pop();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+</script>
+</body>
+</html>
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
