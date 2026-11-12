@@ -67,17 +67,18 @@ header h1 {
   background: radial-gradient(circle, #262626 0%, #101010 40%, transparent 70%);
 }
 
-.pigeon {
-  position: relative;
-  width: min(75vw, 550px);
-  z-index: 2;
-  filter: drop-shadow(0 20px 30px #000);
-  animation: spin 3s linear infinite;
+#pigeon {
+  animation: pigeonSpin 3s linear infinite;
+  transform-style: preserve-3d;
 }
 
-@keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+@keyframes pigeonSpin {
+  from {
+    transform: rotateY(0deg);
+  }
+  to {
+    transform: rotateY(360deg);
+  }
 }
 
 .stats {
