@@ -1,340 +1,234 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SpinningPigeon.Online</title>
-
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: #050505;
-  color: white;
-  font-family: 'Share Tech Mono', monospace;
-  overflow-x: hidden;
-}
-
-header {
-  background: #f5f5f5;
-  color: black;
-  text-align: center;
-  padding: 30px 10px;
-  border-bottom: 3px solid #222;
-}
-
-header h1 {
-  font-family: 'Press Start 2P', monospace;
-  font-size: clamp(17px, 3vw, 36px);
-  margin: 0;
-  letter-spacing: -3px;
-}
-
-.subtitle {
-  font-size: 11px;
-  margin-top: 14px;
-  letter-spacing: 3px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  padding: 13px 20px;
-  color: #aaa;
-  font-size: 14px;
-  border-bottom: 1px solid #222;
-}
-
-.stage {
-  min-height: 590px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-}
-
-.stage::before {
-  content: "";
-  position: absolute;
-  width: 480px;
-  height: 480px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #262626 0%, #101010 40%, transparent 70%);
-}
-
-#pigeon {
-  animation: pigeonSpin 3s linear infinite;
-  transform-style: preserve-3d;
-}
-
-@keyframes pigeonSpin {
-  from {
-    transform: rotateY(0deg);
-  }
-  to {
-    transform: rotateY(360deg);
-  }
-}
-
-.stats {
-  border-top: 1px solid #252525;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 15px;
-  color: #aaa;
-  font-size: 15px;
-}
-
-.stats strong { color: white; }
-
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  padding: 20px;
-  flex-wrap: wrap;
-}
-
-button {
-  background: #111;
-  color: #eee;
-  border: 1px solid #555;
-  padding: 12px 22px;
-  font-family: inherit;
-  cursor: pointer;
-  transition: .2s;
-}
-
-button:hover {
-  background: white;
-  color: black;
-}
-
-footer {
-  text-align: center;
-  padding: 30px;
-  color: #555;
-  font-size: 12px;
-  border-top: 1px solid #222;
-}
-
-#message {
-  text-align: center;
-  color: #888;
-  padding: 10px;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-  <h1>SPINNINGPIGEON</h1>
-  <div class="subtitle">THE INTERNET'S FINEST BIRD.</div>
-</header>
-
-<div class="topbar">
-  <span>Rating: <strong id="rating">0</strong> seconds</span>
-  <span>EST. 2026</span>
-</div>
-
-<main class="stage">
-
-<svg class="pigeon" viewBox="0 0 600 400"
-     xmlns="http://www.w3.org/2000/svg">
-
-<defs>
-  <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#aaa9a3"/>
-    <stop offset="35%" stop-color="#656a70"/>
-    <stop offset="75%" stop-color="#30343b"/>
-    <stop offset="100%" stop-color="#171a20"/>
-  </linearGradient>
-
-  <linearGradient id="wing" x1="0" y1="0" x2="0.8" y2="1">
-    <stop offset="0%" stop-color="#777e85"/>
-    <stop offset="50%" stop-color="#444a52"/>
-    <stop offset="100%" stop-color="#202329"/>
-  </linearGradient>
-
-  <linearGradient id="neck" x1="0" y1="0" x2="1" y2="1">
-    <stop offset="0%" stop-color="#64b9a3"/>
-    <stop offset="45%" stop-color="#555b91"/>
-    <stop offset="100%" stop-color="#343a42"/>
-  </linearGradient>
-</defs>
-
-<!-- Tail -->
-<path d="M390 205 Q480 140 555 170
-Q505 205 555 230 Q480 245 405 240Z"
-fill="#343941" stroke="#16191e" stroke-width="5"/>
-
-<!-- Main body -->
-<path d="M110 205
-Q125 115 255 105
-Q365 85 425 175
-Q460 240 385 275
-Q290 320 175 265
-Q115 250 110 205Z"
-fill="url(#body)" stroke="#15181d" stroke-width="6"/>
-
-<!-- Wing -->
-<path d="M175 185
-Q235 115 345 145
-Q415 165 420 225
-Q360 290 245 267
-Q200 245 175 185Z"
-fill="url(#wing)" stroke="#20242a" stroke-width="5"/>
-
-<!-- Feather details -->
-<g fill="none" stroke="#969da4" stroke-width="5" opacity=".35">
-<path d="M205 190 Q260 160 340 175"/>
-<path d="M215 215 Q280 180 365 195"/>
-<path d="M230 240 Q300 210 380 220"/>
-<path d="M250 260 Q320 240 365 245"/>
-</g>
-
-<!-- Neck -->
-<path d="M115 195
-Q75 155 105 95
-Q130 50 190 85
-Q235 120 190 190
-Q155 225 115 195Z"
-fill="url(#neck)" stroke="#20252a" stroke-width="5"/>
-
-<!-- Head -->
-<circle cx="142" cy="78" r="48"
-fill="#777d83" stroke="#252a30" stroke-width="5"/>
-
-<!-- Head highlight -->
-<path d="M110 57 Q140 20 170 49"
-fill="none" stroke="#b9bdc0" stroke-width="8" opacity=".35"/>
-
-<!-- Beak -->
-<path d="M98 80 L35 94 L91 111Z"
-fill="#b6a18b" stroke="#3a302a" stroke-width="4"/>
-<path d="M38 94 L91 99"
-stroke="#54453d" stroke-width="3"/>
-
-<!-- Eye -->
-<circle cx="123" cy="72" r="10" fill="#090909"/>
-<circle cx="126" cy="69" r="3" fill="white"/>
-
-<!-- Feet -->
-<g stroke="#b47758" stroke-width="8" fill="none"
-stroke-linecap="round">
-<path d="M275 285 L265 330 L240 341 M265 330 L286 342"/>
-<path d="M355 280 L367 326 L345 339 M367 326 L390 337"/>
-</g>
-
-<!-- Toe details -->
-<g fill="#bd8260">
-<circle cx="240" cy="341" r="5"/>
-<circle cx="286" cy="342" r="5"/>
-<circle cx="345" cy="339" r="5"/>
-<circle cx="390" cy="337" r="5"/>
-</g>
-
-</svg>
-
-</main>
-
-<div id="message">A pigeon is spinning somewhere on the internet.</div>
-
-<div class="stats">
-  <span><strong id="viewers">1</strong> people are watching the pigeon right now.</span>
-  <span>Daily highscore: <strong id="score">0</strong></span>
-</div>
-
-<div class="controls">
-  <button id="music">TUNES: OFF</button>
-  <button id="speed">CHANGE SPEED</button>
-  <button id="pause">PAUSE</button>
-</div>
-
-<footer>
-  SPINNINGPIGEON.ONLINE © 2026<br><br>
-  MADE FOR THE LOVE OF PIGEONS.
-</footer>
-
-<script>
-let rating = 0;
-let highscore = 0;
-let speed = 3;
-let paused = false;
-let playing = false;
-let audio;
-
-const pigeon = document.querySelector('.pigeon');
-
-setInterval(() => {
-  rating++;
-  document.getElementById('rating').textContent = rating;
-
-  if (rating > highscore) {
-    highscore = rating;
-    document.getElementById('score').textContent = highscore;
-  }
-}, 1000);
-
-setInterval(() => {
-  document.getElementById('viewers').textContent =
-    Math.floor(Math.random() * 70) + 20;
-}, 4000);
-
-document.getElementById('speed').onclick = () => {
-  speed = speed === 3 ? 1.5 : speed === 1.5 ? 6 : 3;
-  pigeon.style.animationDuration = speed + 's';
-};
-
-document.getElementById('pause').onclick = () => {
-  paused = !paused;
-  pigeon.style.animationPlayState = paused ? 'paused' : 'running';
-  document.getElementById('pause').textContent =
-    paused ? 'RESUME' : 'PAUSE';
-};
-
-document.getElementById('music').onclick = async () => {
-  if (!audio) {
-    audio = new (window.AudioContext || window.webkitAudioContext)();
-  }
-
-  if (audio.state === 'suspended') await audio.resume();
-
-  playing = !playing;
-
-  if (playing) {
-    let oscillator = audio.createOscillator();
-    let gain = audio.createGain();
-
-    oscillator.type = 'square';
-    oscillator.frequency.value = 220;
-    gain.gain.value = 0.025;
-
-    oscillator.connect(gain);
-    gain.connect(audio.destination);
-    oscillator.start();
-
-    window.musicOscillator = oscillator;
-    window.musicGain = gain;
-  } else {
-    if (window.musicOscillator) {
-      window.musicOscillator.stop();
-      window.musicOscillator = null;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spinning Pigeon</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
     }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script>
+let angle = 0;
+let particles = [];
+let babies = []; 
+let bounce = 0;
+let clickTimer = 0;
+let startTime;
+
+// Texture memory slots to hold realistic pigeon patterns
+let bodyTex, wingTex, headTex;
+
+function setup() {
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  startTime = millis();
+  
+  // --- PROCEDURAL REALISTIC TEXTURAL GRAPHICS ---
+  bodyTex = createGraphics(128, 128);
+  bodyTex.background(140, 145, 150); // Base Slate Grey
+  for (let y = 0; y < 128; y++) {
+    let inter = map(y, 0, 128, 0, 1);
+    let c = lerpColor(color(115, 120, 125), color(165, 170, 175), inter);
+    bodyTex.stroke(c);
+    bodyTex.line(0, y, 128, y);
+  }
+  // Dark tail feathers band
+  bodyTex.fill(50, 52, 55);
+  bodyTex.noStroke();
+  bodyTex.rect(0, 100, 128, 28);
+
+  // Wing Texture Map (Pigeon Dual Wing-Bars)
+  wingTex = createGraphics(128, 128);
+  wingTex.background(135, 140, 145);
+  for(let i=0; i<300; i++){
+    wingTex.fill(100, 105, 110, 40);
+    wingTex.noStroke();
+    wingTex.ellipse(random(128), random(128), random(5,15));
+  }
+  wingTex.fill(45, 47, 50);
+  wingTex.rect(0, 45, 128, 12);
+  wingTex.rect(0, 70, 128, 12);
+
+  // Head Map (Glossy Iridescent Shimmer)
+  headTex = createGraphics(128, 128);
+  headTex.background(110, 115, 120); 
+  for (let y = 0; y < 128; y++) {
+    let intensity = map(y, 0, 128, 100, 255);
+    headTex.stroke(35, 130 + sin(y*0.1)*20, 95 + cos(y*0.1)*20, intensity);
+    headTex.line(0, y, 128, y);
   }
 
-  document.getElementById('music').textContent =
-    playing ? 'TUNES: ON' : 'TUNES: OFF';
-};
-</script>
+  // Cosmos backdrop dust particles
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: random(-600, 600), y: random(-400, 400), z: random(-600, 600),
+      speed: random(1, 3), size: random(2, 5)
+    });
+  }
+}
 
+function draw() {
+  background(5, 7, 15);
+  
+  ambientLight(150);
+  directionalLight(245, 245, 255, 0.5, 1, -0.2);
+  directionalLight(80, 80, 90, -0.5, -1, 0.2); 
+  
+  noStroke();
+  fill(160, 175, 190, 130);
+  for (let p of particles) {
+    push(); translate(p.x, p.y, p.z); sphere(p.size); pop();
+    p.y -= p.speed; if (p.y < -400) p.y = 400;
+  }
+
+  let speedMultiplier = mouseX > 0 ? map(mouseX, 0, width, 0.1, 8.0) : 1.0;
+  let baseSpeed = 0.025 * speedMultiplier;
+  if (clickTimer > 0) { baseSpeed *= 3.0; clickTimer--; }
+  angle += baseSpeed;
+  bounce = sin(frameCount * 0.05) * 5;
+
+  for (let i = babies.length - 1; i >= 0; i--) {
+    let baby = babies[i];
+    baby.orbitAngle += baby.orbitSpeed * speedMultiplier;
+    baby.localSpin += 0.05 * speedMultiplier;
+    let bx = cos(baby.orbitAngle) * baby.radius;
+    let bz = sin(baby.orbitAngle) * baby.radius;
+    push();
+      translate(bx, baby.yPos, bz);
+      rotateY(baby.localSpin);
+      scale(baby.sizeScale); 
+      drawRealisticPigeon(); 
+    pop();
+    baby.yPos -= 0.5;
+    if (baby.yPos < -windowHeight / 2 - 100) babies.splice(i, 1);
+  }
+
+  push();
+    translate(0, bounce, 0);
+    rotateY(angle); 
+    let clickScale = clickTimer > 0 ? 1.25 : 1.0;
+    scale(min(width, height) * 0.0035 * clickScale);
+    drawRealisticPigeon(); 
+  pop();
+
+  // Timer text
+  push();
+    translate(-width / 2 + 30, -height / 2 + 38, 0); 
+    let elapsedSeconds = ((millis() - startTime) / 1000).toFixed(2);
+    fill(100, 220, 255);
+    textSize(18);
+    textAlign(LEFT, CENTER);
+    text("TIME: " + elapsedSeconds + "s", 0, 0);
+  pop();
+}
+
+function mousePressed() {
+  clickTimer = 40; 
+  babies.push({
+    orbitAngle: random(TWO_PI), 
+    orbitSpeed: random(0.01, 0.03), 
+    radius: random(180, 320),
+    yPos: random(-100, 150), 
+    localSpin: random(TWO_PI), 
+    sizeScale: min(width, height) * 0.0012 
+  });
+  if (babies.length > 25) babies.shift();
+}
+
+function drawRealisticPigeon() {
+  noStroke();
+
+  // 1. Sleek Torso Body + Applied Gradient Map
+  texture(bodyTex);
+  push();
+    scale(0.88, 1.0, 1.48);
+    sphere(48, 24, 24); 
+  pop();
+
+  // 2. Head Assembly
+  push();
+    translate(0, -38, 32); 
+    
+    texture(headTex);
+    sphere(19, 24, 24);
+    
+    // Cere + Beak
+    fill(235, 235, 240); 
+    push(); translate(0, 1, 15); sphere(4.5); pop(); 
+    
+    fill(55, 55, 58);
+    push();
+      translate(0, 3, 21);
+      rotateX(1.42); 
+      cone(3.2, 22, 16);
+    pop();
+    
+    // Eyes
+    fill(240, 100, 20);
+    push(); translate(15.5, -2, 3); sphere(3.2); pop(); 
+    push(); translate(-15.5, -2, 3); sphere(3.2); pop();
+    fill(10, 10, 12);
+    push(); translate(16.2, -2, 3.5); sphere(1.5); pop(); 
+    push(); translate(-16.2, -2, 3.5); sphere(1.5); pop();
+  pop();
+
+  // 3. Wings with Double Wing Bars
+  texture(wingTex);
+  push();
+    translate(38, -8, -12);
+    rotateY(-0.08);
+    rotateZ(0.14 + sin(frameCount * 0.1) * 0.02); 
+    scale(0.14, 0.72, 1.85); 
+    box(50);
+  pop();
+  push();
+    translate(-38, -8, -12);
+    rotateY(0.08);
+    rotateZ(-0.14 - sin(frameCount * 0.1) * 0.02);
+    scale(0.14, 0.72, 1.85); 
+    box(50);
+  pop();
+
+  // 4. Tail
+  texture(bodyTex);
+  push();
+    translate(0, 14, -84);
+    rotateX(0.04);
+    scale(0.85, 0.08, 1.65); 
+    box(36);
+  pop();
+
+  // 5. Legs
+  fill(215, 75, 75);
+  push();
+    translate(15, 48, -2);
+    cylinder(2.8, 26);
+    translate(0, 13, 4);
+    scale(1.1, 0.2, 1.7);
+    box(10);
+  pop();
+  push();
+    translate(-16, 48, -2);
+    cylinder(2.8, 26);
+    translate(0, 13, 4);
+    scale(1.1, 0.2, 1.7);
+    box(10);
+  pop();
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
+</script>
 </body>
 </html>
