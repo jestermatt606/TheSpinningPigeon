@@ -1,0 +1,339 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpinningPigeon.Online</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #050505;
+  color: white;
+  font-family: 'Share Tech Mono', monospace;
+  overflow-x: hidden;
+}
+
+header {
+  background: #f5f5f5;
+  color: black;
+  text-align: center;
+  padding: 30px 10px;
+  border-bottom: 3px solid #222;
+}
+
+header h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(17px, 3vw, 36px);
+  margin: 0;
+  letter-spacing: -3px;
+}
+
+.subtitle {
+  font-size: 11px;
+  margin-top: 14px;
+  letter-spacing: 3px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 13px 20px;
+  color: #aaa;
+  font-size: 14px;
+  border-bottom: 1px solid #222;
+}
+
+.stage {
+  min-height: 590px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.stage::before {
+  content: "";
+  position: absolute;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #262626 0%, #101010 40%, transparent 70%);
+}
+
+.pigeon {
+  position: relative;
+  width: min(75vw, 550px);
+  z-index: 2;
+  filter: drop-shadow(0 20px 30px #000);
+  animation: spin 3s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.stats {
+  border-top: 1px solid #252525;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 15px;
+  color: #aaa;
+  font-size: 15px;
+}
+
+.stats strong { color: white; }
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: #111;
+  color: #eee;
+  border: 1px solid #555;
+  padding: 12px 22px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: .2s;
+}
+
+button:hover {
+  background: white;
+  color: black;
+}
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #555;
+  font-size: 12px;
+  border-top: 1px solid #222;
+}
+
+#message {
+  text-align: center;
+  color: #888;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>SPINNINGPIGEON</h1>
+  <div class="subtitle">THE INTERNET'S FINEST BIRD.</div>
+</header>
+
+<div class="topbar">
+  <span>Rating: <strong id="rating">0</strong> seconds</span>
+  <span>EST. 2026</span>
+</div>
+
+<main class="stage">
+
+<svg class="pigeon" viewBox="0 0 600 400"
+     xmlns="http://www.w3.org/2000/svg">
+
+<defs>
+  <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#aaa9a3"/>
+    <stop offset="35%" stop-color="#656a70"/>
+    <stop offset="75%" stop-color="#30343b"/>
+    <stop offset="100%" stop-color="#171a20"/>
+  </linearGradient>
+
+  <linearGradient id="wing" x1="0" y1="0" x2="0.8" y2="1">
+    <stop offset="0%" stop-color="#777e85"/>
+    <stop offset="50%" stop-color="#444a52"/>
+    <stop offset="100%" stop-color="#202329"/>
+  </linearGradient>
+
+  <linearGradient id="neck" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0%" stop-color="#64b9a3"/>
+    <stop offset="45%" stop-color="#555b91"/>
+    <stop offset="100%" stop-color="#343a42"/>
+  </linearGradient>
+</defs>
+
+<!-- Tail -->
+<path d="M390 205 Q480 140 555 170
+Q505 205 555 230 Q480 245 405 240Z"
+fill="#343941" stroke="#16191e" stroke-width="5"/>
+
+<!-- Main body -->
+<path d="M110 205
+Q125 115 255 105
+Q365 85 425 175
+Q460 240 385 275
+Q290 320 175 265
+Q115 250 110 205Z"
+fill="url(#body)" stroke="#15181d" stroke-width="6"/>
+
+<!-- Wing -->
+<path d="M175 185
+Q235 115 345 145
+Q415 165 420 225
+Q360 290 245 267
+Q200 245 175 185Z"
+fill="url(#wing)" stroke="#20242a" stroke-width="5"/>
+
+<!-- Feather details -->
+<g fill="none" stroke="#969da4" stroke-width="5" opacity=".35">
+<path d="M205 190 Q260 160 340 175"/>
+<path d="M215 215 Q280 180 365 195"/>
+<path d="M230 240 Q300 210 380 220"/>
+<path d="M250 260 Q320 240 365 245"/>
+</g>
+
+<!-- Neck -->
+<path d="M115 195
+Q75 155 105 95
+Q130 50 190 85
+Q235 120 190 190
+Q155 225 115 195Z"
+fill="url(#neck)" stroke="#20252a" stroke-width="5"/>
+
+<!-- Head -->
+<circle cx="142" cy="78" r="48"
+fill="#777d83" stroke="#252a30" stroke-width="5"/>
+
+<!-- Head highlight -->
+<path d="M110 57 Q140 20 170 49"
+fill="none" stroke="#b9bdc0" stroke-width="8" opacity=".35"/>
+
+<!-- Beak -->
+<path d="M98 80 L35 94 L91 111Z"
+fill="#b6a18b" stroke="#3a302a" stroke-width="4"/>
+<path d="M38 94 L91 99"
+stroke="#54453d" stroke-width="3"/>
+
+<!-- Eye -->
+<circle cx="123" cy="72" r="10" fill="#090909"/>
+<circle cx="126" cy="69" r="3" fill="white"/>
+
+<!-- Feet -->
+<g stroke="#b47758" stroke-width="8" fill="none"
+stroke-linecap="round">
+<path d="M275 285 L265 330 L240 341 M265 330 L286 342"/>
+<path d="M355 280 L367 326 L345 339 M367 326 L390 337"/>
+</g>
+
+<!-- Toe details -->
+<g fill="#bd8260">
+<circle cx="240" cy="341" r="5"/>
+<circle cx="286" cy="342" r="5"/>
+<circle cx="345" cy="339" r="5"/>
+<circle cx="390" cy="337" r="5"/>
+</g>
+
+</svg>
+
+</main>
+
+<div id="message">A pigeon is spinning somewhere on the internet.</div>
+
+<div class="stats">
+  <span><strong id="viewers">1</strong> people are watching the pigeon right now.</span>
+  <span>Daily highscore: <strong id="score">0</strong></span>
+</div>
+
+<div class="controls">
+  <button id="music">TUNES: OFF</button>
+  <button id="speed">CHANGE SPEED</button>
+  <button id="pause">PAUSE</button>
+</div>
+
+<footer>
+  SPINNINGPIGEON.ONLINE © 2026<br><br>
+  MADE FOR THE LOVE OF PIGEONS.
+</footer>
+
+<script>
+let rating = 0;
+let highscore = 0;
+let speed = 3;
+let paused = false;
+let playing = false;
+let audio;
+
+const pigeon = document.querySelector('.pigeon');
+
+setInterval(() => {
+  rating++;
+  document.getElementById('rating').textContent = rating;
+
+  if (rating > highscore) {
+    highscore = rating;
+    document.getElementById('score').textContent = highscore;
+  }
+}, 1000);
+
+setInterval(() => {
+  document.getElementById('viewers').textContent =
+    Math.floor(Math.random() * 70) + 20;
+}, 4000);
+
+document.getElementById('speed').onclick = () => {
+  speed = speed === 3 ? 1.5 : speed === 1.5 ? 6 : 3;
+  pigeon.style.animationDuration = speed + 's';
+};
+
+document.getElementById('pause').onclick = () => {
+  paused = !paused;
+  pigeon.style.animationPlayState = paused ? 'paused' : 'running';
+  document.getElementById('pause').textContent =
+    paused ? 'RESUME' : 'PAUSE';
+};
+
+document.getElementById('music').onclick = async () => {
+  if (!audio) {
+    audio = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  if (audio.state === 'suspended') await audio.resume();
+
+  playing = !playing;
+
+  if (playing) {
+    let oscillator = audio.createOscillator();
+    let gain = audio.createGain();
+
+    oscillator.type = 'square';
+    oscillator.frequency.value = 220;
+    gain.gain.value = 0.025;
+
+    oscillator.connect(gain);
+    gain.connect(audio.destination);
+    oscillator.start();
+
+    window.musicOscillator = oscillator;
+    window.musicGain = gain;
+  } else {
+    if (window.musicOscillator) {
+      window.musicOscillator.stop();
+      window.musicOscillator = null;
+    }
+  }
+
+  document.getElementById('music').textContent =
+    playing ? 'TUNES: ON' : 'TUNES: OFF';
+};
+</script>
+
+</body>
+</html>
